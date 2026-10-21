@@ -110,12 +110,11 @@
     .status { min-height: 1.6em; margin: 10px 0 0; color: var(--green-dark); font-weight: 700; }
     .status.error { color: #a12b24; }
 
-    .chart { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-    .chart-row { display: grid; grid-template-columns: 3.5rem minmax(50px, 1fr) 5rem; gap: 10px; align-items: center; }
-    .chart-period { color: var(--text); font-size: .92rem; font-weight: 700; }
-    .chart-track { height: 18px; overflow: hidden; border-radius: 999px; background: #edf0f3; }
-    .chart-bar { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #6553cf, #a397f5); }
-    .chart-value { color: var(--ink); font-size: .92rem; font-variant-numeric: tabular-nums; font-weight: 750; text-align: right; }
+    .scatter-plot { display: block; width: 100%; height: auto; }
+    .plot-grid { stroke: #d8e1e6; stroke-width: 1; }
+    .plot-axis { stroke: #586780; stroke-width: 1.5; }
+    .plot-label { fill: #34415b; font: 12px system-ui, sans-serif; }
+    .plot-point { fill: #5844c5; stroke: #fff; stroke-width: 2; }
 
     .bonus { border-color: #d9d2ff; background: linear-gradient(145deg, #fff, #f6f4ff); }
     .bonus-value { display: block; margin: 4px 0; color: var(--purple); font-size: 2.2rem; font-weight: 850; }
@@ -196,7 +195,7 @@
 
         <section class="card" aria-labelledby="projection-title">
           <h2 id="projection-title">A possible saving path</h2>
-          <p class="subtext">What if you saved <strong id="plan-amount">$25.00</strong> each month? The bars show your balance moving toward your goal.</p>
+          <p class="subtext">What if you saved <strong id="plan-amount">$25.00</strong> each month? Each dot shows your possible balance as it moves toward your goal.</p>
           <div class="field">
             <label for="monthly-amount">Plan to save each month</label>
             <div class="amount-wrap">
@@ -205,7 +204,29 @@
             </div>
             <p class="hint" id="monthly-hint" aria-live="polite">Change this number to explore different plans. It’s only an example, not a promise.</p>
           </div>
-          <ol class="chart" id="projection-chart" aria-label="Projected savings by month"></ol>
+          <svg class="scatter-plot" viewBox="0 0 380 260" role="img" aria-labelledby="projection-chart-title projection-chart-description">
+            <title id="projection-chart-title">Possible savings by month</title>
+            <desc id="projection-chart-description">A scatter plot of projected saved balance over six months.</desc>
+            <line class="plot-grid" x1="54" y1="112" x2="350" y2="112"></line>
+            <line class="plot-grid" x1="54" y1="20" x2="350" y2="20"></line>
+            <line class="plot-axis" x1="54" y1="20" x2="54" y2="204"></line>
+            <line class="plot-axis" x1="54" y1="204" x2="350" y2="204"></line>
+            <text class="plot-label" x="46" y="208" text-anchor="end">$0</text>
+            <text class="plot-label" x="46" y="116" text-anchor="end">$250</text>
+            <text class="plot-label" x="46" y="24" text-anchor="end">$500</text>
+            <text class="plot-label" x="202" y="250" text-anchor="middle">Month</text>
+            <text class="plot-label" x="14" y="112" text-anchor="middle" transform="rotate(-90 14 112)">Saved balance</text>
+            <g id="projection-points"></g>
+            <g class="plot-label" text-anchor="middle">
+              <text x="54" y="224">0</text>
+              <text x="103.3" y="224">1</text>
+              <text x="152.7" y="224">2</text>
+              <text x="202" y="224">3</text>
+              <text x="251.3" y="224">4</text>
+              <text x="300.7" y="224">5</text>
+              <text x="350" y="224">6</text>
+            </g>
+          </svg>
         </section>
       </div>
 
@@ -249,7 +270,8 @@
       const addAmount = document.querySelector("#add-amount");
       const status = document.querySelector("#form-status");
       const monthlyAmount = document.querySelector("#monthly-amount");
-      const chart = document.querySelector("#projection-chart");
+      const chartPoints = document.querySelector("#projection-points");
+      const chartDescription = document.querySelector("#projection-chart-description");
 
       function updateProgress() {
         const percent = Math.round((saved / goal) * 100);
@@ -289,26 +311,16 @@
             amount: Math.min(goal, saved + safeMonthly * month)
           });
         }
-        chart.replaceChildren(...points.map(({ label, amount }) => {
-          const row = document.createElement("li");
-          row.className = "chart-row";
-          const period = document.createElement("span");
-          period.className = "chart-period";
-          period.textContent = label;
-          const track = document.createElement("span");
-          track.className = "chart-track";
-          track.setAttribute("aria-hidden", "true");
-          const bar = document.createElement("span");
-          bar.className = "chart-bar";
-          bar.style.display = "block";
-          bar.style.width = `${Math.min(100, (amount / goal) * 100)}%`;
-          track.append(bar);
-          const value = document.createElement("span");
-          value.className = "chart-value";
-          value.textContent = money(amount);
-          row.append(period, track, value);
-          return row;
+        chartPoints.replaceChildren(...points.map(({ amount }, month) => {
+          const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          point.setAttribute("class", "plot-point");
+          point.setAttribute("cx", String(54 + (month / 6) * 296));
+          point.setAttribute("cy", String(204 - (amount / goal) * 184));
+          point.setAttribute("r", "5");
+          return point;
         }));
+        chartDescription.textContent =
+          `Projected savings start at ${money(saved)} and rise by ${money(safeMonthly)} each month, up to the ${money(goal)} goal.`;
       }
 
       document.querySelector("#add-savings-form").addEventListener("submit", (event) => {
