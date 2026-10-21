@@ -52,21 +52,22 @@
     }
     .hero {
       padding: clamp(22px, 5vw, 42px);
-      color: #fff;
-      background: linear-gradient(130deg, #075c47, #138568);
+      color: var(--ink);
       margin-bottom: 18px;
     }
+    .hero-boxes { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .hero-box { flex: 0 0 calc(50% - 8px); height: 88px; border-radius: 22px; background: var(--green-soft); border: 1px solid var(--green); }
     .eyebrow { margin: 0 0 8px; font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     h1, h2, h3, p { margin-top: 0; }
     h1 { margin-bottom: 10px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
-    .hero p { max-width: 62ch; margin-bottom: 0; color: #effff8; }
+    .hero p { max-width: 62ch; margin-bottom: 0; color: var(--muted); }
     .demo-badge {
       display: inline-flex;
       margin-top: 18px;
       padding: 7px 12px;
-      border: 1px solid rgba(255,255,255,.42);
+      border: 1px solid var(--green);
       border-radius: 999px;
-      background: rgba(255,255,255,.12);
+      background: var(--green-soft); color: var(--green-dark);
       font-size: .9rem;
       font-weight: 700;
     }
@@ -125,6 +126,8 @@
 
     @media (max-width: 760px) {
       .layout { grid-template-columns: 1fr; }
+      .hero-boxes { flex-direction: column; }
+      .hero-box { flex-basis: auto; width: 100%; }
     }
     @media (max-width: 480px) {
       .shell { width: min(100% - 20px, 1100px); }
@@ -145,6 +148,7 @@
 
   <main class="main shell">
     <section class="hero" aria-labelledby="page-title">
+      <div class="hero-boxes" aria-hidden="true"><div class="hero-box"></div><div class="hero-box"></div></div>
       <p class="eyebrow">Small steps add up</p>
       <h1 id="page-title">UpSaver+</h1>
       <p>Choose a goal, see your progress, and try out a saving plan. You’re in charge: this practice page never moves real money.</p>
