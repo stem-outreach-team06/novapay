@@ -80,6 +80,26 @@
 
     .header-actions { display: flex; align-items: center; gap: 10px; }
 
+    .dyslexia-toggle {
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 2px solid var(--accent);
+      border-radius: var(--r-sm);
+      background: var(--accent);
+      color: white;
+      font: inherit;
+      font-size: 0.8em;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .dyslexia-toggle:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+
+    body.dyslexia-friendly {
+      font-family: Verdana, Arial, sans-serif;
+      letter-spacing: 0.04em;
+      line-height: 1.7;
+    }
+
     /* MAKEOVER? These buttons are small and have no hover or focus style. */
     .icon-btn {
       width: 28px; height: 28px;
@@ -374,6 +394,12 @@
     /* ── CALC GRID ──────────────────────────── */
     /* MAKEOVER? Squash your browser window to phone width. What happens here? */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    @media (max-width: 480px) {
+      .app-header { height: auto; min-height: 60px; flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+      .header-actions { flex-basis: 100%; justify-content: flex-end; gap: 6px; }
+      .dyslexia-toggle { font-size: 0.75em; padding: 8px 10px; }
+    }
   </style>
 </head>
 <body>
@@ -381,6 +407,7 @@
   <header class="app-header">
     <div class="app-logo">nova<span>pay</span></div>
     <div class="header-actions">
+      <button class="dyslexia-toggle" id="dyslexia-toggle" type="button" aria-pressed="false">Dyslexia-friendly text: Off</button>
       <!-- MAKEOVER? What would a screen reader say about these buttons? -->
       <button class="icon-btn">🔔</button>
       <button class="icon-btn">⚙️</button>
@@ -514,6 +541,13 @@
 
   <script>
     let balance = 1250;
+
+    const dyslexiaToggle = document.getElementById("dyslexia-toggle");
+    dyslexiaToggle.addEventListener("click", () => {
+      const enabled = document.body.classList.toggle("dyslexia-friendly");
+      dyslexiaToggle.setAttribute("aria-pressed", String(enabled));
+      dyslexiaToggle.textContent = `Dyslexia-friendly text: ${enabled ? "On" : "Off"}`;
+    });
 
     function makeWithdrawal() {
       const successEl = document.getElementById("wd-success");
