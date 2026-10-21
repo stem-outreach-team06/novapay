@@ -56,7 +56,9 @@
       margin-bottom: 18px;
     }
     .hero-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
-    .hero-box { min-height: clamp(120px, 22vw, 200px); border-radius: 22px; background: var(--green-soft); border: 1px solid var(--green); }
+    .hero-box { display: grid; min-height: clamp(120px, 22vw, 200px); align-content: center; justify-items: center; padding: 20px; border-radius: 22px; background: var(--green-soft); border: 1px solid var(--green); text-align: center; }
+    .hero-box-label { margin: 0; color: var(--green-dark); font-size: 1rem; font-weight: 750; }
+    .hero-box-value { margin: 4px 0 0; color: var(--ink); font-size: clamp(2rem, 5vw, 3rem); font-variant-numeric: tabular-nums; font-weight: 850; letter-spacing: -.04em; }
     .eyebrow { margin: 0 0 8px; font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     h1, h2, h3, p { margin-top: 0; }
     h1 { margin-bottom: 10px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
@@ -147,7 +149,16 @@
 
   <main class="main shell">
     <section class="hero" aria-labelledby="page-title">
-      <div class="hero-boxes" aria-hidden="true"><div class="hero-box"></div><div class="hero-box"></div></div>
+      <div class="hero-boxes">
+        <section class="hero-box" aria-labelledby="account-balance-label">
+          <h2 class="hero-box-label" id="account-balance-label">Balance</h2>
+          <p class="hero-box-value">$2,450.00</p>
+        </section>
+        <section class="hero-box" aria-labelledby="account-savings-label">
+          <h2 class="hero-box-label" id="account-savings-label">Savings</h2>
+          <p class="hero-box-value" id="account-savings">$180.00</p>
+        </section>
+      </div>
       <h1 id="page-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">UpSaver+</h1>
     </section>
 
@@ -242,6 +253,7 @@
 
       const money = (amount) => `$${amount.toFixed(2)}`;
       const balanceOutput = document.querySelector("#saved-balance");
+      const accountSavingsOutput = document.querySelector("#account-savings");
       const progress = document.querySelector("#goal-progress");
       const progressFill = document.querySelector("#progress-fill");
       const progressPercent = document.querySelector("#progress-percent");
@@ -255,6 +267,7 @@
         const percent = Math.round((saved / goal) * 100);
         const remaining = Math.max(0, goal - saved);
         balanceOutput.textContent = money(saved);
+        accountSavingsOutput.textContent = money(saved);
         progressFill.style.width = `${percent}%`;
         progress.setAttribute("aria-valuenow", saved.toFixed(2));
         progress.setAttribute("aria-valuetext", `${money(saved)} saved of ${money(goal)}`);
