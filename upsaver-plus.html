@@ -31,6 +31,15 @@
       color: var(--text);
       font: 1rem/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+    body.dyslexic-font {
+      font-family: "OpenDyslexic", "Comic Sans MS", Verdana, sans-serif;
+      line-height: 1.7;
+      letter-spacing: .04em;
+      word-spacing: .12em;
+    }
+    body.dyslexic-font button, body.dyslexic-font input {
+      font-family: "OpenDyslexic", "Comic Sans MS", Verdana, sans-serif;
+    }
 
     button, input { font: inherit; }
     a { color: var(--green-dark); }
@@ -40,9 +49,20 @@
     }
 
     .shell { width: min(1100px, calc(100% - 32px)); margin: 0 auto; }
-    .topbar { padding: 20px 0; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 0; }
     .brand { color: var(--ink); font-size: 1.25rem; font-weight: 800; text-decoration: none; }
     .brand span { color: var(--green); }
+    #font-toggle {
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 2px solid var(--green-dark);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--green-dark);
+      cursor: pointer;
+      font-weight: 750;
+    }
+    #font-toggle:hover, #font-toggle[aria-pressed="true"] { background: var(--green-soft); }
     .main { padding: 12px 0 48px; }
     .card {
       background: var(--card);
@@ -180,6 +200,7 @@
 <body>
   <header class="topbar shell">
     <a class="brand" href="index.html" aria-label="NovaPay home">nova<span>pay</span></a>
+    <button id="font-toggle" type="button" aria-pressed="false">Dyslexia-friendly font: Off</button>
   </header>
 
   <main class="main shell">
@@ -342,6 +363,13 @@
       const monthlyAmount = document.querySelector("#monthly-amount");
       const chartPoints = document.querySelector("#projection-points");
       const chartDescription = document.querySelector("#projection-chart-description");
+      const fontToggle = document.querySelector("#font-toggle");
+
+      fontToggle.addEventListener("click", () => {
+        const enabled = document.body.classList.toggle("dyslexic-font");
+        fontToggle.setAttribute("aria-pressed", String(enabled));
+        fontToggle.textContent = `Dyslexia-friendly font: ${enabled ? "On" : "Off"}`;
+      });
 
       function updateProgress() {
         const percent = Math.round((saved / goal) * 100);
