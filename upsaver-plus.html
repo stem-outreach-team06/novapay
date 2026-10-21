@@ -105,6 +105,7 @@
     }
     .button:hover { background: var(--green-dark); }
     .hint { margin: 7px 0 0; color: var(--muted); font-size: .92rem; }
+    .hint.error { color: #a12b24; font-weight: 700; }
     .status { min-height: 1.6em; margin: 10px 0 0; color: var(--green-dark); font-weight: 700; }
     .status.error { color: #a12b24; }
 
@@ -202,7 +203,7 @@
               <span class="currency" aria-hidden="true">$</span>
               <input id="monthly-amount" type="number" min="0" max="500" step="1" inputmode="decimal" value="25" aria-describedby="monthly-hint">
             </div>
-            <p class="hint" id="monthly-hint">Change this number to explore different plans. It’s only an example, not a promise.</p>
+            <p class="hint" id="monthly-hint" aria-live="polite">Change this number to explore different plans. It’s only an example, not a promise.</p>
           </div>
           <ol class="chart" id="projection-chart" aria-label="Projected savings by month"></ol>
         </section>
@@ -273,7 +274,13 @@
 
       function updateChart() {
         const monthly = Number(monthlyAmount.value);
-        const safeMonthly = Number.isFinite(monthly) && monthly > 0 ? monthly : 0;
+        const validMonthly = Number.isFinite(monthly) && monthly >= 0 && monthly <= 500;
+        const safeMonthly = validMonthly ? monthly : 0;
+        const monthlyHint = document.querySelector("#monthly-hint");
+        monthlyHint.textContent = validMonthly
+          ? "Change this number to explore different plans. It’s only an example, not a promise."
+          : "Enter a monthly amount from $0 to $500 to update the example.";
+        monthlyHint.classList.toggle("error", !validMonthly);
         document.querySelector("#plan-amount").textContent = money(safeMonthly);
         const points = [{ label: "Now", amount: saved }];
         for (let month = 1; month <= 6; month += 1) {
