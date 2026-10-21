@@ -524,11 +524,11 @@
 
       const amount = parseFloat(document.getElementById("withdraw-amount").value);
 
-      // Update the balance
-      balance = balance + amount;
+      // Update the balance (a withdrawal takes money OUT)
+      balance = balance - amount;
 
       // Show the new balance on the hero card
-      document.getElementById("balence-display").textContent =
+      document.getElementById("balance-display").textContent =
         "£" + balance.toFixed(2);
 
       successEl.style.display  = "block";
