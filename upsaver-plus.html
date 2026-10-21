@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UpSaver+ | NovaPay</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172238;
+      --text: #34415b;
+      --muted: #586780;
+      --paper: #f3f7f7;
+      --card: #fff;
+      --line: #d8e1e6;
+      --green: #08795c;
+      --green-dark: #075c47;
+      --green-soft: #e5f6ef;
+      --purple: #5844c5;
+      --purple-soft: #f0edff;
+      --warning: #7b4b00;
+      --warning-bg: #fff4d6;
+      --shadow: 0 12px 30px rgba(23, 34, 56, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: radial-gradient(circle at top left, #e2f8ef 0, transparent 35rem), var(--paper);
+      color: var(--text);
+      font: 1rem/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+    a { color: var(--green-dark); }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid #bd6b00;
+      outline-offset: 3px;
+    }
+
+    .shell { width: min(1100px, calc(100% - 32px)); margin: 0 auto; }
+    .topbar { padding: 20px 0; }
+    .brand { color: var(--ink); font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+    .brand span { color: var(--green); }
+    .main { padding: 12px 0 48px; }
+    .hero, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: clamp(22px, 5vw, 42px);
+      color: #fff;
+      background: linear-gradient(130deg, #075c47, #138568);
+      margin-bottom: 18px;
+    }
+    .eyebrow { margin: 0 0 8px; font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 10px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
+    .hero p { max-width: 62ch; margin-bottom: 0; color: #effff8; }
+    .demo-badge {
+      display: inline-flex;
+      margin-top: 18px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,.42);
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); gap: 18px; }
+    .stack { display: grid; align-content: start; gap: 18px; }
+    .card { padding: clamp(18px, 3vw, 26px); }
+    .card h2 { margin-bottom: 4px; color: var(--ink); font-size: 1.35rem; }
+    .subtext { margin-bottom: 18px; color: var(--muted); }
+    .goal-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline; }
+    .goal-name { color: var(--ink); font-size: 1.65rem; font-weight: 800; }
+    .goal-target { color: var(--muted); font-weight: 700; }
+    .balance { margin: 12px 0 2px; color: var(--ink); font-size: clamp(2rem, 6vw, 3rem); font-weight: 850; letter-spacing: -.04em; }
+    .balance-label { margin-bottom: 18px; color: var(--muted); }
+    .progress-track { height: 18px; overflow: hidden; border-radius: 999px; background: #e8eef0; }
+    .progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #0a8b66, #47bf88); transition: width .25s ease; }
+    .progress-caption { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font-weight: 700; }
+    .progress-caption span:last-child { text-align: right; }
+    .tip { margin: 18px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--green-soft); color: #124c3c; }
+
+    .field { margin: 16px 0; }
+    .field label { display: block; margin-bottom: 6px; color: var(--ink); font-weight: 750; }
+    .input-row { display: flex; gap: 10px; }
+    .amount-wrap { display: flex; align-items: center; flex: 1; min-width: 0; padding: 0 12px; border: 1px solid #9aa9b6; border-radius: 12px; background: #fff; }
+    .currency { color: var(--muted); font-weight: 700; }
+    input[type="number"] { width: 100%; min-width: 0; padding: 12px 8px; border: 0; background: transparent; color: var(--ink); }
+    .button {
+      min-height: 48px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--green);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 800;
+    }
+    .button:hover { background: var(--green-dark); }
+    .hint { margin: 7px 0 0; color: var(--muted); font-size: .92rem; }
+    .hint.error { color: #a12b24; font-weight: 700; }
+    .status { min-height: 1.6em; margin: 10px 0 0; color: var(--green-dark); font-weight: 700; }
+    .status.error { color: #a12b24; }
+
+    .chart { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+    .chart-row { display: grid; grid-template-columns: 3.5rem minmax(50px, 1fr) 5rem; gap: 10px; align-items: center; }
+    .chart-period { color: var(--text); font-size: .92rem; font-weight: 700; }
+    .chart-track { height: 18px; overflow: hidden; border-radius: 999px; background: #edf0f3; }
+    .chart-bar { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #6553cf, #a397f5); }
+    .chart-value { color: var(--ink); font-size: .92rem; font-variant-numeric: tabular-nums; font-weight: 750; text-align: right; }
+
+    .bonus { border-color: #d9d2ff; background: linear-gradient(145deg, #fff, #f6f4ff); }
+    .bonus-value { display: block; margin: 4px 0; color: var(--purple); font-size: 2.2rem; font-weight: 850; }
+    .formula { margin: 14px 0 0; padding: 12px; border-radius: 12px; background: var(--purple-soft); color: #31276e; font-size: .95rem; }
+    .notice { margin-top: 18px; padding: 14px 16px; border-left: 4px solid #dda83c; border-radius: 8px; background: var(--warning-bg); color: #533700; }
+    .notice strong { display: block; margin-bottom: 3px; }
+    footer { padding: 0 0 28px; color: var(--muted); font-size: .9rem; text-align: center; }
+
+    @media (max-width: 760px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .shell { width: min(100% - 20px, 1100px); }
+      .topbar { padding: 14px 0; }
+      .input-row { flex-direction: column; }
+      .button { width: 100%; }
+      .chart-row { grid-template-columns: 3rem minmax(35px, 1fr) 4.5rem; gap: 7px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar shell">
+    <a class="brand" href="index.html" aria-label="NovaPay home">nova<span>pay</span></a>
+  </header>
+
+  <main class="main shell">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Small steps add up</p>
+      <h1 id="page-title">UpSaver+</h1>
+      <p>Choose a goal, see your progress, and try out a saving plan. You’re in charge: this practice page never moves real money.</p>
+      <span class="demo-badge">Practice demo · No card connection</span>
+    </section>
+
+    <div class="layout">
+      <div class="stack">
+        <section class="card" aria-labelledby="goal-title">
+          <div class="goal-heading">
+            <h2 id="goal-title" class="goal-name">My new bike</h2>
+            <span class="goal-target">Goal: <span id="goal-target">$500.00</span></span>
+          </div>
+          <p class="balance" id="saved-balance">$180.00</p>
+          <p class="balance-label">Saved so far in this demo</p>
+          <div
+            class="progress-track"
+            id="goal-progress"
+            role="progressbar"
+            aria-label="Progress toward My new bike"
+            aria-valuemin="0"
+            aria-valuemax="500"
+            aria-valuenow="180"
+            aria-valuetext="$180 saved of $500"
+          >
+            <div class="progress-fill" id="progress-fill" style="width: 36%"></div>
+          </div>
+          <div class="progress-caption">
+            <span id="progress-percent">36% of your goal</span>
+            <span id="remaining">$320.00 to go</span>
+          </div>
+          <p class="tip">You can start with any amount. There’s no penalty for changing your plan or taking a break.</p>
+
+          <form id="add-savings-form" novalidate>
+            <div class="field">
+              <label for="add-amount">Try adding to your goal</label>
+              <div class="input-row">
+                <div class="amount-wrap">
+                  <span class="currency" aria-hidden="true">$</span>
+                  <input id="add-amount" name="amount" type="number" min="0.01" max="320" step="0.01" inputmode="decimal" placeholder="For example, 10" aria-describedby="amount-hint">
+                </div>
+                <button class="button" type="submit">Add in this demo</button>
+              </div>
+              <p class="hint" id="amount-hint">Enter a positive amount up to the amount left to reach your goal.</p>
+              <p class="status" id="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </section>
+
+        <section class="card" aria-labelledby="projection-title">
+          <h2 id="projection-title">A possible saving path</h2>
+          <p class="subtext">What if you saved <strong id="plan-amount">$25.00</strong> each month? The bars show your balance moving toward your goal.</p>
+          <div class="field">
+            <label for="monthly-amount">Plan to save each month</label>
+            <div class="amount-wrap">
+              <span class="currency" aria-hidden="true">$</span>
+              <input id="monthly-amount" type="number" min="0" max="500" step="1" inputmode="decimal" value="25" aria-describedby="monthly-hint">
+            </div>
+            <p class="hint" id="monthly-hint" aria-live="polite">Change this number to explore different plans. It’s only an example, not a promise.</p>
+          </div>
+          <ol class="chart" id="projection-chart" aria-label="Projected savings by month"></ol>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="card bonus" aria-labelledby="bonus-title">
+          <h2 id="bonus-title">Bonus example</h2>
+          <p class="subtext">A pretend bonus estimate on the amount saved today.</p>
+          <span class="bonus-value" id="bonus-value">$1.80</span>
+          <p id="bonus-description">That’s for keeping $180.00 saved for 6 months at a pretend 2% yearly rate.</p>
+          <p class="formula"><strong>How we worked it out:</strong> savings × yearly rate × time<br><span id="formula-text">$180 × 2% × 6 ÷ 12 = $1.80</span></p>
+        </section>
+
+        <aside class="notice" aria-label="Important demo information">
+          <strong>This is a learning demo, not a real account.</strong>
+          No card is linked, no money is moved, and nothing is saved when you close or refresh this page. The 2% rate is made up for practice; real bonuses can have different rules and are never guaranteed.
+        </aside>
+
+        <section class="card" aria-labelledby="help-title">
+          <h2 id="help-title">What does “bonus” mean?</h2>
+          <p class="subtext">Some savings products may add extra money under specific rules. This example uses simple interest so you can explore the maths; it does not describe a real offer.</p>
+          <p><strong>Try it:</strong> add a small amount, then change your monthly plan. Watch the progress and chart update.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="shell">UpSaver+ practice page · Refresh to start again</footer>
+
+  <script>
+    (() => {
+      const goal = 500;
+      const bonusRate = 0.02;
+      const bonusMonths = 6;
+      let saved = 180;
+
+      const money = (amount) => `$${amount.toFixed(2)}`;
+      const balanceOutput = document.querySelector("#saved-balance");
+      const progress = document.querySelector("#goal-progress");
+      const progressFill = document.querySelector("#progress-fill");
+      const progressPercent = document.querySelector("#progress-percent");
+      const remainingOutput = document.querySelector("#remaining");
+      const addAmount = document.querySelector("#add-amount");
+      const status = document.querySelector("#form-status");
+      const monthlyAmount = document.querySelector("#monthly-amount");
+      const chart = document.querySelector("#projection-chart");
+
+      function updateProgress() {
+        const percent = Math.round((saved / goal) * 100);
+        const remaining = Math.max(0, goal - saved);
+        balanceOutput.textContent = money(saved);
+        progressFill.style.width = `${percent}%`;
+        progress.setAttribute("aria-valuenow", saved.toFixed(2));
+        progress.setAttribute("aria-valuetext", `${money(saved)} saved of ${money(goal)}`);
+        progressPercent.textContent = `${percent}% of your goal`;
+        remainingOutput.textContent = remaining === 0 ? "Goal reached!" : `${money(remaining)} to go`;
+        addAmount.max = remaining.toFixed(2);
+      }
+
+      function updateBonus() {
+        const bonus = saved * bonusRate * (bonusMonths / 12);
+        document.querySelector("#bonus-value").textContent = money(bonus);
+        document.querySelector("#bonus-description").textContent =
+          `That’s for keeping ${money(saved)} saved for ${bonusMonths} months at a pretend 2% yearly rate.`;
+        document.querySelector("#formula-text").textContent =
+          `$${saved.toFixed(2)} × 2% × ${bonusMonths} ÷ 12 = ${money(bonus)}`;
+      }
+
+      function updateChart() {
+        const monthly = Number(monthlyAmount.value);
+        const validMonthly = Number.isFinite(monthly) && monthly >= 0 && monthly <= 500;
+        const safeMonthly = validMonthly ? monthly : 0;
+        const monthlyHint = document.querySelector("#monthly-hint");
+        monthlyHint.textContent = validMonthly
+          ? "Change this number to explore different plans. It’s only an example, not a promise."
+          : "Enter a monthly amount from $0 to $500 to update the example.";
+        monthlyHint.classList.toggle("error", !validMonthly);
+        document.querySelector("#plan-amount").textContent = money(safeMonthly);
+        const points = [{ label: "Now", amount: saved }];
+        for (let month = 1; month <= 6; month += 1) {
+          points.push({
+            label: `Month ${month}`,
+            amount: Math.min(goal, saved + safeMonthly * month)
+          });
+        }
+        chart.replaceChildren(...points.map(({ label, amount }) => {
+          const row = document.createElement("li");
+          row.className = "chart-row";
+          const period = document.createElement("span");
+          period.className = "chart-period";
+          period.textContent = label;
+          const track = document.createElement("span");
+          track.className = "chart-track";
+          track.setAttribute("aria-hidden", "true");
+          const bar = document.createElement("span");
+          bar.className = "chart-bar";
+          bar.style.display = "block";
+          bar.style.width = `${Math.min(100, (amount / goal) * 100)}%`;
+          track.append(bar);
+          const value = document.createElement("span");
+          value.className = "chart-value";
+          value.textContent = money(amount);
+          row.append(period, track, value);
+          return row;
+        }));
+      }
+
+      document.querySelector("#add-savings-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const amount = addAmount.valueAsNumber;
+        const remaining = goal - saved;
+        if (!Number.isFinite(amount) || amount <= 0) {
+          status.textContent = "Enter an amount greater than $0.00 to try adding savings.";
+          status.classList.add("error");
+          addAmount.focus();
+          return;
+        }
+        if (amount > remaining) {
+          status.textContent = `That’s more than the ${money(remaining)} left to reach your goal. Try a smaller amount.`;
+          status.classList.add("error");
+          addAmount.focus();
+          return;
+        }
+
+        saved = Math.round((saved + amount) * 100) / 100;
+        status.textContent = `${money(amount)} added in the demo. Your saved total is now ${money(saved)}.`;
+        status.classList.remove("error");
+        addAmount.value = "";
+        updateProgress();
+        updateBonus();
+        updateChart();
+      });
+
+      monthlyAmount.addEventListener("input", updateChart);
+      updateProgress();
+      updateBonus();
+      updateChart();
+      console.info("UpSaver+ practice demo ready. Try adding an amount or changing the monthly plan; refresh resets the example.");
+    })();
+  </script>
+</body>
+</html>
