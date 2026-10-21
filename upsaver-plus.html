@@ -156,9 +156,9 @@
         <section class="card" aria-labelledby="goal-title">
           <div class="goal-heading">
             <h2 id="goal-title" class="goal-name">My new bike</h2>
-            <span class="goal-target">Goal: <span id="goal-target">$500.00</span></span>
+            <span class="goal-target">Goal: <span id="goal-target">£500.00</span></span>
           </div>
-          <p class="balance" id="saved-balance">$180.00</p>
+          <p class="balance" id="saved-balance">£180.00</p>
           <p class="balance-label">Saved so far in this demo</p>
           <div
             class="progress-track"
@@ -168,13 +168,13 @@
             aria-valuemin="0"
             aria-valuemax="500"
             aria-valuenow="180"
-            aria-valuetext="$180 saved of $500"
+            aria-valuetext="£180 saved of £500"
           >
             <div class="progress-fill" id="progress-fill" style="width: 36%"></div>
           </div>
           <div class="progress-caption">
             <span id="progress-percent">36% of your goal</span>
-            <span id="remaining">$320.00 to go</span>
+            <span id="remaining">£320.00 to go</span>
           </div>
           <p class="tip">You can start with any amount. There’s no penalty for changing your plan or taking a break.</p>
 
@@ -183,7 +183,7 @@
               <label for="add-amount">Try adding to your goal</label>
               <div class="input-row">
                 <div class="amount-wrap">
-                  <span class="currency" aria-hidden="true">$</span>
+                  <span class="currency" aria-hidden="true">£</span>
                   <input id="add-amount" name="amount" type="number" min="0.01" max="320" step="0.01" inputmode="decimal" placeholder="For example, 10" aria-describedby="amount-hint">
                 </div>
                 <button class="button" type="submit">Add in this demo</button>
@@ -196,11 +196,11 @@
 
         <section class="card" aria-labelledby="projection-title">
           <h2 id="projection-title">A possible saving path</h2>
-          <p class="subtext">What if you saved <strong id="plan-amount">$25.00</strong> each month? The bars show your balance moving toward your goal.</p>
+          <p class="subtext">What if you saved <strong id="plan-amount">£25.00</strong> each month? The bars show your balance moving toward your goal.</p>
           <div class="field">
             <label for="monthly-amount">Plan to save each month</label>
             <div class="amount-wrap">
-              <span class="currency" aria-hidden="true">$</span>
+              <span class="currency" aria-hidden="true">£</span>
               <input id="monthly-amount" type="number" min="0" max="500" step="1" inputmode="decimal" value="25" aria-describedby="monthly-hint">
             </div>
             <p class="hint" id="monthly-hint" aria-live="polite">Change this number to explore different plans. It’s only an example, not a promise.</p>
@@ -213,9 +213,9 @@
         <section class="card bonus" aria-labelledby="bonus-title">
           <h2 id="bonus-title">Bonus example</h2>
           <p class="subtext">A pretend bonus estimate on the amount saved today.</p>
-          <span class="bonus-value" id="bonus-value">$1.80</span>
-          <p id="bonus-description">That’s for keeping $180.00 saved for 6 months at a pretend 2% yearly rate.</p>
-          <p class="formula"><strong>How we worked it out:</strong> savings × yearly rate × time<br><span id="formula-text">$180 × 2% × 6 ÷ 12 = $1.80</span></p>
+          <span class="bonus-value" id="bonus-value">£1.80</span>
+          <p id="bonus-description">That’s for keeping £180.00 saved for 6 months at a pretend 2% yearly rate.</p>
+          <p class="formula"><strong>How we worked it out:</strong> savings × yearly rate × time<br><span id="formula-text">£180 × 2% × 6 ÷ 12 = £1.80</span></p>
         </section>
 
         <aside class="notice" aria-label="Important demo information">
@@ -240,7 +240,7 @@
       const bonusMonths = 6;
       let saved = 180;
 
-      const money = (amount) => `$${amount.toFixed(2)}`;
+      const money = (amount) => `£${amount.toFixed(2)}`;
       const balanceOutput = document.querySelector("#saved-balance");
       const progress = document.querySelector("#goal-progress");
       const progressFill = document.querySelector("#progress-fill");
@@ -269,7 +269,7 @@
         document.querySelector("#bonus-description").textContent =
           `That’s for keeping ${money(saved)} saved for ${bonusMonths} months at a pretend 2% yearly rate.`;
         document.querySelector("#formula-text").textContent =
-          `$${saved.toFixed(2)} × 2% × ${bonusMonths} ÷ 12 = ${money(bonus)}`;
+          `£${saved.toFixed(2)} × 2% × ${bonusMonths} ÷ 12 = ${money(bonus)}`;
       }
 
       function updateChart() {
@@ -279,7 +279,7 @@
         const monthlyHint = document.querySelector("#monthly-hint");
         monthlyHint.textContent = validMonthly
           ? "Change this number to explore different plans. It’s only an example, not a promise."
-          : "Enter a monthly amount from $0 to $500 to update the example.";
+          : "Enter a monthly amount from £0 to £500 to update the example.";
         monthlyHint.classList.toggle("error", !validMonthly);
         document.querySelector("#plan-amount").textContent = money(safeMonthly);
         const points = [{ label: "Now", amount: saved }];
@@ -316,7 +316,7 @@
         const amount = addAmount.valueAsNumber;
         const remaining = goal - saved;
         if (!Number.isFinite(amount) || amount <= 0) {
-          status.textContent = "Enter an amount greater than $0.00 to try adding savings.";
+          status.textContent = "Enter an amount greater than £0.00 to try adding savings.";
           status.classList.add("error");
           addAmount.focus();
           return;
