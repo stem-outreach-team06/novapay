@@ -56,22 +56,6 @@
   .card small{color:var(--muted);position:relative;z-index:1}
   footer{text-align:center;color:var(--muted);padding:40px 24px;font-size:.9rem}
 
-  /* Simon the C. Saver — AI assistant mascot */
-  #simon{position:fixed;right:20px;bottom:20px;z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-  #simon-panel{width:min(320px,calc(100vw - 40px));background:var(--panel);border:1px solid var(--panel2);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.4);overflow:hidden}
-  #simon-panel[hidden]{display:none}
-  .simon-head{padding:12px 14px;background:var(--panel2);font-weight:700}
-  .simon-head small{display:block;color:var(--muted);font-weight:400}
-  #simon-log{height:200px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;font-size:.92rem}
-  .simon-msg{padding:8px 10px;border-radius:12px;max-width:88%;line-height:1.35}
-  .simon-msg.bot{background:var(--panel2);align-self:flex-start}
-  .simon-msg.me{background:var(--nova1);align-self:flex-end}
-  #simon-form{display:flex;gap:6px;padding:10px;border-top:1px solid var(--panel2)}
-  #simon-input{flex:1;min-width:0;padding:9px 12px;border-radius:999px;border:1px solid var(--panel2);background:var(--bg);color:var(--text);font:inherit}
-  #simon-form button{padding:9px 14px;border:0;border-radius:999px;background:linear-gradient(90deg,var(--nova1),var(--nova2));color:#fff;font-weight:700;cursor:pointer}
-  #simon-toggle{width:76px;height:76px;padding:0;border:0;border-radius:50%;background:#f4f1ea;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.4)}
-  #simon-toggle:hover,#simon-toggle:focus-visible{transform:scale(1.07);outline:3px solid var(--nova2)}
-  #simon-toggle svg{width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -140,54 +124,5 @@
 
 <footer>&copy; NovaPay &middot; Student Session Launchpad</footer>
 
-<div id="simon">
-  <section id="simon-panel" aria-label="Ask Simon the C. Saver" hidden>
-    <div class="simon-head">Simon the C. Saver<small>Your NovaPay AI assistant</small></div>
-    <div id="simon-log" aria-live="polite"></div>
-    <form id="simon-form">
-      <input id="simon-input" type="search" placeholder="Ask Simon a question..." aria-label="Type your question for Simon" autocomplete="off">
-      <button type="submit">Ask</button>
-    </form>
-  </section>
-  <button id="simon-toggle" type="button" aria-expanded="false" aria-label="Open Simon the C. Saver assistant">
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <path d="M22 88 C14 60 16 28 40 20 C62 14 84 26 84 52 C86 70 82 82 76 88 C60 94 38 94 22 88Z" fill="#fff" stroke="#d9534f" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M20 52 C40 62 66 60 84 48" fill="none" stroke="#d9534f" stroke-width="4" stroke-linecap="round"/>
-      <path d="M38 30l4 6 6 4-6 4-4 6-4-6-6-4 6-4zM62 30l4 6 6 4-6 4-4 6-4-6-6-4 6-4z" fill="#d9534f" transform="translate(-6 -2) scale(.9)"/>
-      <path d="M32 72 C42 80 58 80 70 68" fill="none" stroke="#d9534f" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-  </button>
-</div>
-<script>
-(function(){
-  var toggle=document.getElementById('simon-toggle'),panel=document.getElementById('simon-panel'),
-      log=document.getElementById('simon-log'),form=document.getElementById('simon-form'),input=document.getElementById('simon-input');
-  var answers=[
-    [/save|saving|goal/,"Try the Savings Goal Tracker idea: set a target, then show how many weeks it takes to reach it."],
-    [/interest|rate/,"Interest = amount x (rate / 100). Remember to divide the rate by 100!"],
-    [/loan|mortgage|repay/,"A loan repayment calculator takes the amount, rate and months, then shows the monthly cost."],
-    [/idea|build|feature/,"Ideas: Spending Category Cards, Currency Converter, Budget Planner or Round-Up Savings Calculator."],
-    [/hello|hi|hey/,"Hi! I'm Simon the C. Saver. Ask me about saving, interest or what to build!"]
-  ];
-  function add(text,who){var d=document.createElement('div');d.className='simon-msg '+who;d.textContent=text;log.appendChild(d);log.scrollTop=log.scrollHeight}
-  function reply(q){
-    q=q.toLowerCase();
-    for(var i=0;i<answers.length;i++){if(answers[i][0].test(q))return answers[i][1]}
-    return "Good question! I'm still learning, so try asking about saving, interest, loans or project ideas."
-  }
-  add("Hi! I'm Simon the C. Saver. What would you like to know?",'bot');
-  toggle.addEventListener('click',function(){
-    var open=panel.hidden;panel.hidden=!open;
-    toggle.setAttribute('aria-expanded',open);
-    if(open)input.focus();
-  });
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var q=input.value.trim();if(!q)return;
-    add(q,'me');input.value='';
-    setTimeout(function(){add(reply(q),'bot')},400);
-  });
-})();
-</script>
 </body>
 </html>
