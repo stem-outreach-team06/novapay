@@ -200,7 +200,7 @@
 <body>
   <header class="topbar shell">
     <a class="brand" href="index.html" aria-label="NovaPay home">nova<span>pay</span></a>
-    <button id="font-toggle" type="button" aria-pressed="false">Dyslexia-friendly font: Off</button>
+    <button id="font-toggle" type="button" aria-pressed="false">Dyslexic font: Off</button>
   </header>
 
   <main class="main shell">
@@ -368,7 +368,7 @@
       fontToggle.addEventListener("click", () => {
         const enabled = document.body.classList.toggle("dyslexic-font");
         fontToggle.setAttribute("aria-pressed", String(enabled));
-        fontToggle.textContent = `Dyslexia-friendly font: ${enabled ? "On" : "Off"}`;
+        fontToggle.textContent = `Dyslexic font: ${enabled ? "On" : "Off"}`;
       });
 
       function updateProgress() {
