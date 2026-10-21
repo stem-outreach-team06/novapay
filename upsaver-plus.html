@@ -116,7 +116,9 @@
     .plot-grid { stroke: #d8e1e6; stroke-width: 1; }
     .plot-axis { stroke: #586780; stroke-width: 1.5; }
     .plot-label { fill: #34415b; font: 12px system-ui, sans-serif; }
+    .plot-line { fill: none; stroke: #5844c5; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
     .plot-point { fill: #5844c5; stroke: #fff; stroke-width: 2; }
+    .plot-point:focus { outline: none; stroke: #31276e; stroke-width: 3; }
 
     .bonus { border-color: #d9d2ff; background: linear-gradient(145deg, #fff, #f6f4ff); }
     .bonus-value { display: block; margin: 4px 0; color: var(--purple); font-size: 2.2rem; font-weight: 850; }
@@ -324,12 +326,24 @@
             amount: Math.min(goal, saved + safeMonthly * month)
           });
         }
-        chartPoints.replaceChildren(...points.map(({ amount }, month) => {
+        const chartCoordinates = points.map(({ amount }, month) => ({
+          x: 54 + (month / 6) * 296,
+          y: 204 - (amount / goal) * 184
+        }));
+        const chartLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        chartLine.setAttribute("class", "plot-line");
+        chartLine.setAttribute("points", chartCoordinates.map(({ x, y }) => `${x},${y}`).join(" "));
+        chartPoints.replaceChildren(chartLine, ...points.map(({ label, amount }, month) => {
           const point = document.createElementNS("http://www.w3.org/2000/svg", "circle");
           point.setAttribute("class", "plot-point");
-          point.setAttribute("cx", String(54 + (month / 6) * 296));
-          point.setAttribute("cy", String(204 - (amount / goal) * 184));
+          point.setAttribute("cx", String(chartCoordinates[month].x));
+          point.setAttribute("cy", String(chartCoordinates[month].y));
           point.setAttribute("r", "5");
+          point.setAttribute("tabindex", "0");
+          point.setAttribute("aria-label", `${label}: ${money(amount)} saved`);
+          const tooltip = document.createElementNS("http://www.w3.org/2000/svg", "title");
+          tooltip.textContent = `${label}: ${money(amount)} saved`;
+          point.append(tooltip);
           return point;
         }));
         chartDescription.textContent =
