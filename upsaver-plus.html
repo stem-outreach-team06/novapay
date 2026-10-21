@@ -59,6 +59,8 @@
     .hero-box { display: grid; min-height: clamp(120px, 22vw, 200px); align-content: center; justify-items: center; padding: 20px; border-radius: 22px; background: var(--green-soft); border: 1px solid var(--green); text-align: center; }
     .hero-box-label { margin: 0; color: var(--green-dark); font-size: 1rem; font-weight: 750; }
     .hero-box-value { margin: 4px 0 0; color: var(--ink); font-size: clamp(2rem, 5vw, 3rem); font-variant-numeric: tabular-nums; font-weight: 850; letter-spacing: -.04em; }
+    .interest-rate { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+    .interest-rate strong { color: var(--green-dark); font-size: 1.25rem; }
     .eyebrow { margin: 0 0 8px; font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     h1, h2, h3, p { margin-top: 0; }
     h1 { margin-bottom: 10px; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; }
@@ -192,6 +194,10 @@
           <p class="hero-box-value" id="account-savings">£180.00</p>
         </section>
       </div>
+      <div class="interest-rate" aria-label="Yearly interest rate">
+        <span>Interest rate</span>
+        <strong>4% per year</strong>
+      </div>
       <h1 id="page-title" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">StarSavers+</h1>
     </section>
 
@@ -280,13 +286,13 @@
           <h2 id="bonus-title">Bonus example</h2>
           <p class="subtext">A pretend bonus estimate on the amount saved today.</p>
           <span class="bonus-value" id="bonus-value">£1.80</span>
-          <p id="bonus-description">That’s for keeping £180.00 saved for 6 months at a pretend 2% yearly rate.</p>
-          <p class="formula"><strong>How we worked it out:</strong> savings × yearly rate × time<br><span id="formula-text">£180 × 2% × 6 ÷ 12 = £1.80</span></p>
+          <p id="bonus-description">That’s for keeping £180.00 saved for 6 months at a pretend 4% yearly rate.</p>
+          <p class="formula"><strong>How we worked it out:</strong> savings × yearly rate × time<br><span id="formula-text">£180 × 4% × 6 ÷ 12 = £3.60</span></p>
         </section>
 
         <aside class="notice" aria-label="Important demo information">
           <strong>This is a learning demo, not a real account.</strong>
-          No card is linked, no money is moved, and nothing is saved when you close or refresh this page. The 2% rate is made up for practice; real bonuses can have different rules and are never guaranteed.
+          No card is linked, no money is moved, and nothing is saved when you close or refresh this page. The 4% rate is made up for practice; real bonuses can have different rules and are never guaranteed.
         </aside>
 
         <section class="card" aria-labelledby="help-title">
@@ -320,7 +326,7 @@
   <script>
     (() => {
       const goal = 500;
-      const bonusRate = 0.02;
+      const bonusRate = 0.04;
       const bonusMonths = 6;
       let saved = 180;
 
@@ -354,9 +360,9 @@
         const bonus = saved * bonusRate * (bonusMonths / 12);
         document.querySelector("#bonus-value").textContent = money(bonus);
         document.querySelector("#bonus-description").textContent =
-          `That’s for keeping ${money(saved)} saved for ${bonusMonths} months at a pretend 2% yearly rate.`;
+          `That’s for keeping ${money(saved)} saved for ${bonusMonths} months at a pretend 4% yearly rate.`;
         document.querySelector("#formula-text").textContent =
-          `£${saved.toFixed(2)} × 2% × ${bonusMonths} ÷ 12 = ${money(bonus)}`;
+          `£${saved.toFixed(2)} × 4% × ${bonusMonths} ÷ 12 = ${money(bonus)}`;
       }
 
       function updateChart() {
